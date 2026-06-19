@@ -30,7 +30,7 @@ export default function JPBridge() {
   async function startConversation() {
     setStarted(true);
     setLoading(true);
-    const greeting = await callClaude([], `Start the conversation with a warm greeting appropriate for a ${level} student interested in ${topic}. Introduce yourself as Sayuki briefly.`);
+    const greeting = await callClaude([], `Start the conversation with a warm greeting appropriate for a ${level} student interested in ${topic}. Introduce yourself as Miyu briefly.`);
     setMessages([{ role: "assistant", content: greeting }]);
     setLoading(false);
   }
