@@ -85,12 +85,12 @@ export default function JPBridge() {
     <div style={{ minHeight: "100vh", background: "#0D1117", color: "#E8E8E8", fontFamily: "'DM Sans', system-ui, sans-serif", display: "flex", flexDirection: "column" }}>
       
       {/* Header */}
-      <div style={{ background: "linear-gradient(135deg, #0D1117 0%, #1A2332 100%)", borderBottom: "1px solid #1E3A2F", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <div style={{ background: "linear-gradient(135deg, #0D1117 0%, #1A2332 100%)", borderBottom: "1px solid #3A2020", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <div style={{ fontSize: "28px" }}>⛩️</div>
           <div>
             <div style={{ fontSize: "20px", fontWeight: "700", color: "#FFFFFF", letterSpacing: "-0.3px" }}>JP Bridge</div>
-            <div style={{ fontSize: "12px", color: "#4CAF7D", letterSpacing: "1.5px", textTransform: "uppercase" }}>Japanese Practice</div>
+            <div style={{ fontSize: "12px", color: "#E14F4F", letterSpacing: "1.5px", textTransform: "uppercase" }}>Japanese Practice</div>
           </div>
         </div>
         {started && (
@@ -112,18 +112,18 @@ export default function JPBridge() {
 
           {/* Level Select */}
           <div style={{ width: "100%" }}>
-            <div style={{ fontSize: "11px", color: "#4CAF7D", letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: "10px" }}>Your Level</div>
+            <div style={{ fontSize: "11px", color: "#E14F4F", letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: "10px" }}>Your Level</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               {LEVELS.map(l => (
                 <button key={l.id} onClick={() => setLevel(l.id)} style={{
-                  background: level === l.id ? "#1A2E22" : "#111920",
-                  border: `1px solid ${level === l.id ? "#4CAF7D" : "#1E3A2F"}`,
+                  background: level === l.id ? "#2A1414" : "#111920",
+                  border: `1px solid ${level === l.id ? "#E14F4F" : "#3A2020"}`,
                   borderRadius: "10px", padding: "12px 16px", cursor: "pointer",
                   display: "flex", alignItems: "center", justifyContent: "space-between",
                   transition: "all 0.15s"
                 }}>
                   <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                    <span style={{ fontSize: "15px", fontWeight: "600", color: level === l.id ? "#4CAF7D" : "#FFFFFF" }}>{l.label}</span>
+                    <span style={{ fontSize: "15px", fontWeight: "600", color: level === l.id ? "#E14F4F" : "#FFFFFF" }}>{l.label}</span>
                     <span style={{ fontSize: "13px", color: "#8899AA" }}>{l.jp}</span>
                   </div>
                   <span style={{ fontSize: "12px", color: "#667788" }}>{l.desc}</span>
@@ -134,14 +134,14 @@ export default function JPBridge() {
 
           {/* Topic Select */}
           <div style={{ width: "100%" }}>
-            <div style={{ fontSize: "11px", color: "#4CAF7D", letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: "10px" }}>Topic</div>
+            <div style={{ fontSize: "11px", color: "#E14F4F", letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: "10px" }}>Topic</div>
             <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
               {TOPICS.map(t => (
                 <button key={t.id} onClick={() => setTopic(t.id)} style={{
-                  background: topic === t.id ? "#1A2E22" : "#111920",
-                  border: `1px solid ${topic === t.id ? "#4CAF7D" : "#1E3A2F"}`,
+                  background: topic === t.id ? "#2A1414" : "#111920",
+                  border: `1px solid ${topic === t.id ? "#E14F4F" : "#3A2020"}`,
                   borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
-                  fontSize: "13px", color: topic === t.id ? "#4CAF7D" : "#AABBCC",
+                  fontSize: "13px", color: topic === t.id ? "#E14F4F" : "#AABBCC",
                   display: "flex", alignItems: "center", gap: "6px", transition: "all 0.15s"
                 }}>
                   {t.emoji} {t.label}
@@ -151,11 +151,11 @@ export default function JPBridge() {
           </div>
 
           <button onClick={startConversation} style={{
-            background: "linear-gradient(135deg, #2D6A4F, #4CAF7D)",
+            background: "linear-gradient(135deg, #B5342E, #E14F4F)",
             border: "none", borderRadius: "12px", padding: "16px 48px",
             color: "#FFFFFF", fontSize: "16px", fontWeight: "600",
             cursor: "pointer", letterSpacing: "0.3px", width: "100%",
-            boxShadow: "0 4px 20px rgba(76, 175, 125, 0.25)"
+            boxShadow: "0 4px 20px rgba(225, 79, 79, 0.25)"
           }}>
             始めましょう — Let's Begin
           </button>
@@ -166,8 +166,8 @@ export default function JPBridge() {
         <div style={{ flex: 1, display: "flex", flexDirection: "column", maxWidth: "640px", margin: "0 auto", width: "100%" }}>
           
           {/* Level badge */}
-          <div style={{ padding: "10px 20px", borderBottom: "1px solid #1E3A2F", display: "flex", gap: "8px", alignItems: "center" }}>
-            <span style={{ background: "#1A2E22", color: "#4CAF7D", fontSize: "11px", padding: "3px 10px", borderRadius: "20px", fontWeight: "600", letterSpacing: "0.5px" }}>
+          <div style={{ padding: "10px 20px", borderBottom: "1px solid #3A2020", display: "flex", gap: "8px", alignItems: "center" }}>
+            <span style={{ background: "#2A1414", color: "#E14F4F", fontSize: "11px", padding: "3px 10px", borderRadius: "20px", fontWeight: "600", letterSpacing: "0.5px" }}>
               {currentLevel?.label} · {currentLevel?.jp}
             </span>
             <span style={{ background: "#111920", color: "#8899AA", fontSize: "11px", padding: "3px 10px", borderRadius: "20px" }}>
@@ -180,14 +180,14 @@ export default function JPBridge() {
             {messages.map((msg, i) => (
               <div key={i} style={{ display: "flex", justifyContent: msg.role === "user" ? "flex-end" : "flex-start" }}>
                 {msg.role === "assistant" && (
-                  <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "linear-gradient(135deg, #2D6A4F, #4CAF7D)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", marginRight: "10px", flexShrink: 0, marginTop: "4px" }}>
+                  <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "linear-gradient(135deg, #B5342E, #E14F4F)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", marginRight: "10px", flexShrink: 0, marginTop: "4px" }}>
                     ⛩️
                   </div>
                 )}
                 <div style={{
                   maxWidth: "80%",
-                  background: msg.role === "user" ? "linear-gradient(135deg, #1A3D2B, #2D6A4F)" : "#111920",
-                  border: `1px solid ${msg.role === "user" ? "#2D6A4F" : "#1E3A2F"}`,
+                  background: msg.role === "user" ? "linear-gradient(135deg, #3D1A1A, #B5342E)" : "#111920",
+                  border: `1px solid ${msg.role === "user" ? "#B5342E" : "#3A2020"}`,
                   borderRadius: msg.role === "user" ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
                   padding: "12px 16px",
                   fontSize: "14px", lineHeight: "1.7", color: "#E8E8E8",
@@ -199,10 +199,10 @@ export default function JPBridge() {
             ))}
             {loading && (
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "linear-gradient(135deg, #2D6A4F, #4CAF7D)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px" }}>⛩️</div>
-                <div style={{ background: "#111920", border: "1px solid #1E3A2F", borderRadius: "18px 18px 18px 4px", padding: "12px 16px", display: "flex", gap: "6px", alignItems: "center" }}>
+                <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "linear-gradient(135deg, #B5342E, #E14F4F)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px" }}>⛩️</div>
+                <div style={{ background: "#111920", border: "1px solid #3A2020", borderRadius: "18px 18px 18px 4px", padding: "12px 16px", display: "flex", gap: "6px", alignItems: "center" }}>
                   {[0,1,2].map(i => (
-                    <div key={i} style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#4CAF7D", animation: "pulse 1.2s ease-in-out infinite", animationDelay: `${i * 0.2}s` }} />
+                    <div key={i} style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#E14F4F", animation: "pulse 1.2s ease-in-out infinite", animationDelay: `${i * 0.2}s` }} />
                   ))}
                 </div>
               </div>
@@ -211,7 +211,7 @@ export default function JPBridge() {
           </div>
 
           {/* Input */}
-          <div style={{ padding: "16px 20px", borderTop: "1px solid #1E3A2F", background: "#0D1117" }}>
+          <div style={{ padding: "16px 20px", borderTop: "1px solid #3A2020", background: "#0D1117" }}>
             <div style={{ display: "flex", gap: "10px", alignItems: "flex-end" }}>
               <textarea
                 value={input}
@@ -220,7 +220,7 @@ export default function JPBridge() {
                 placeholder="Type in English or Japanese..."
                 rows={1}
                 style={{
-                  flex: 1, background: "#111920", border: "1px solid #1E3A2F",
+                  flex: 1, background: "#111920", border: "1px solid #3A2020",
                   borderRadius: "12px", padding: "12px 16px", color: "#E8E8E8",
                   fontSize: "14px", resize: "none", outline: "none",
                   fontFamily: "inherit", lineHeight: "1.5",
@@ -228,7 +228,7 @@ export default function JPBridge() {
                 }}
               />
               <button onClick={sendMessage} disabled={loading || !input.trim()} style={{
-                background: loading || !input.trim() ? "#1A2332" : "linear-gradient(135deg, #2D6A4F, #4CAF7D)",
+                background: loading || !input.trim() ? "#1A2332" : "linear-gradient(135deg, #B5342E, #E14F4F)",
                 border: "none", borderRadius: "12px", width: "44px", height: "44px",
                 cursor: loading || !input.trim() ? "not-allowed" : "pointer",
                 fontSize: "18px", display: "flex", alignItems: "center", justifyContent: "center",
@@ -250,10 +250,10 @@ export default function JPBridge() {
           30% { opacity: 1; transform: scale(1); }
         }
         * { box-sizing: border-box; }
-        textarea:focus { border-color: #4CAF7D !important; }
+        textarea:focus { border-color: #E14F4F !important; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #1E3A2F; border-radius: 2px; }
+        ::-webkit-scrollbar-thumb { background: #3A2020; border-radius: 2px; }
       `}</style>
     </div>
   );
