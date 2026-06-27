@@ -21,11 +21,74 @@ export default function JPBridge() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [started, setStarted] = useState(false);
+  const [voiceOn, setVoiceOn] = useState(true);
+  const [listening, setListening] = useState(false);
   const bottomRef = useRef(null);
+  const recognitionRef = useRef(null);
 
   useEffect(() => {
     if (bottomRef.current) bottomRef.current.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
+
+  // Browser TTS voices can load asynchronously; nudge them to load early.
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.getVoices();
+      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    }
+  }, []);
+
+  // Pull out just the Japanese lines so Miyu speaks Japanese, not the romaji/English.
+  function extractJapanese(text) {
+    const lines = text.split("\n");
+    const jpLines = lines.filter(line => /[\u3040-\u30ff\u4e00-\u9faf]/.test(line));
+    // Strip leading emoji/symbols and bracketed notes, keep the Japanese text.
+    const cleaned = jpLines
+      .map(line => line.replace(/[🇯🇵📖💬📝✨🌸😊⛩️]/g, "").replace(/\[.*?\]/g, "").trim())
+      .filter(Boolean)
+      .join("。 ");
+    return cleaned || text;
+  }
+
+  function speak(text) {
+    if (!voiceOn || typeof window === "undefined" || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const jp = extractJapanese(text);
+    if (!jp) return;
+    const utterance = new SpeechSynthesisUtterance(jp);
+    utterance.lang = "ja-JP";
+    utterance.rate = 0.9;
+    const voices = window.speechSynthesis.getVoices();
+    const jpVoice = voices.find(v => v.lang === "ja-JP" || v.lang.startsWith("ja"));
+    if (jpVoice) utterance.voice = jpVoice;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function toggleListening() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Voice input isn't supported in this browser. Try Chrome.");
+      return;
+    }
+    if (listening) {
+      recognitionRef.current?.stop();
+      setListening(false);
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = "ja-JP";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      setInput(prev => (prev ? prev + " " : "") + transcript);
+    };
+    recognition.onend = () => setListening(false);
+    recognition.onerror = () => setListening(false);
+    recognitionRef.current = recognition;
+    recognition.start();
+    setListening(true);
+  }
 
   async function startConversation() {
     setStarted(true);
@@ -33,6 +96,7 @@ export default function JPBridge() {
     const greeting = await callClaude([], `Start the conversation with a warm greeting appropriate for a ${level} student interested in ${topic}. Introduce yourself as Miyu briefly.`);
     setMessages([{ role: "assistant", content: greeting }]);
     setLoading(false);
+    speak(greeting);
   }
 
   async function callClaude(history, userMessage) {
@@ -67,6 +131,7 @@ export default function JPBridge() {
     const reply = await callClaude(newMessages, userMsg);
     setMessages([...newMessages, { role: "assistant", content: reply }]);
     setLoading(false);
+    speak(reply);
   }
 
   function handleKey(e) {
@@ -94,9 +159,14 @@ export default function JPBridge() {
           </div>
         </div>
         {started && (
-          <button onClick={reset} style={{ background: "transparent", border: "1px solid #2A3A4A", color: "#8899AA", padding: "6px 14px", borderRadius: "6px", cursor: "pointer", fontSize: "13px" }}>
-            New Session
-          </button>
+          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            <button onClick={() => { setVoiceOn(v => { if (v) window.speechSynthesis?.cancel(); return !v; }); }} title={voiceOn ? "Voice on" : "Voice off"} style={{ background: voiceOn ? "#2A1414" : "transparent", border: `1px solid ${voiceOn ? "#E14F4F" : "#2A3A4A"}`, color: voiceOn ? "#E14F4F" : "#8899AA", padding: "6px 12px", borderRadius: "6px", cursor: "pointer", fontSize: "13px" }}>
+              {voiceOn ? "🔊 Voice" : "🔇 Voice"}
+            </button>
+            <button onClick={reset} style={{ background: "transparent", border: "1px solid #2A3A4A", color: "#8899AA", padding: "6px 14px", borderRadius: "6px", cursor: "pointer", fontSize: "13px" }}>
+              New Session
+            </button>
+          </div>
         )}
       </div>
 
@@ -227,6 +297,14 @@ export default function JPBridge() {
                   minHeight: "44px", maxHeight: "120px"
                 }}
               />
+              <button onClick={toggleListening} title={listening ? "Listening — tap to stop" : "Tap to speak Japanese"} style={{
+                background: listening ? "linear-gradient(135deg, #B5342E, #E14F4F)" : "#111920",
+                border: `1px solid ${listening ? "#E14F4F" : "#3A2020"}`, borderRadius: "12px", width: "44px", height: "44px",
+                cursor: "pointer", fontSize: "18px", display: "flex", alignItems: "center", justifyContent: "center",
+                flexShrink: 0, animation: listening ? "micpulse 1.2s ease-in-out infinite" : "none"
+              }}>
+                🎤
+              </button>
               <button onClick={sendMessage} disabled={loading || !input.trim()} style={{
                 background: loading || !input.trim() ? "#1A2332" : "linear-gradient(135deg, #B5342E, #E14F4F)",
                 border: "none", borderRadius: "12px", width: "44px", height: "44px",
@@ -238,7 +316,7 @@ export default function JPBridge() {
               </button>
             </div>
             <div style={{ fontSize: "11px", color: "#445566", marginTop: "8px", textAlign: "center" }}>
-              Press Enter to send · Shift+Enter for new line
+              {listening ? "Listening… speak in Japanese" : "Type, or tap 🎤 to speak · 🔊 toggles Miyu's voice"}
             </div>
           </div>
         </div>
@@ -248,6 +326,10 @@ export default function JPBridge() {
         @keyframes pulse {
           0%, 60%, 100% { opacity: 0.3; transform: scale(0.8); }
           30% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes micpulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(225,79,79,0.5); }
+          50% { box-shadow: 0 0 0 8px rgba(225,79,79,0); }
         }
         * { box-sizing: border-box; }
         textarea:focus { border-color: #E14F4F !important; }
