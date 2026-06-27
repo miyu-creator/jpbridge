@@ -21,7 +21,6 @@ export default function JPBridge() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [started, setStarted] = useState(false);
-  const [voiceOn, setVoiceOn] = useState(true);
   const [listening, setListening] = useState(false);
   const bottomRef = useRef(null);
   const recognitionRef = useRef(null);
@@ -51,7 +50,7 @@ export default function JPBridge() {
   }
 
   function speak(text) {
-    if (!voiceOn || typeof window === "undefined" || !window.speechSynthesis) return;
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     const jp = extractJapanese(text);
     if (!jp) return;
@@ -159,14 +158,9 @@ export default function JPBridge() {
           </div>
         </div>
         {started && (
-          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-            <button onClick={() => { setVoiceOn(v => { if (v) window.speechSynthesis?.cancel(); return !v; }); }} title={voiceOn ? "Voice on" : "Voice off"} style={{ background: voiceOn ? "#2A1414" : "transparent", border: `1px solid ${voiceOn ? "#E14F4F" : "#2A3A4A"}`, color: voiceOn ? "#E14F4F" : "#8899AA", padding: "6px 12px", borderRadius: "6px", cursor: "pointer", fontSize: "13px" }}>
-              {voiceOn ? "🔊 Voice" : "🔇 Voice"}
-            </button>
-            <button onClick={reset} style={{ background: "transparent", border: "1px solid #2A3A4A", color: "#8899AA", padding: "6px 14px", borderRadius: "6px", cursor: "pointer", fontSize: "13px" }}>
-              New Session
-            </button>
-          </div>
+          <button onClick={reset} style={{ background: "transparent", border: "1px solid #2A3A4A", color: "#8899AA", padding: "6px 14px", borderRadius: "6px", cursor: "pointer", fontSize: "13px" }}>
+            New Session
+          </button>
         )}
       </div>
 
@@ -316,7 +310,7 @@ export default function JPBridge() {
               </button>
             </div>
             <div style={{ fontSize: "11px", color: "#445566", marginTop: "8px", textAlign: "center" }}>
-              {listening ? "Listening… speak in Japanese" : "Type, or tap 🎤 to speak · 🔊 toggles Miyu's voice"}
+              {listening ? "Listening… speak in Japanese" : "Type, or tap 🎤 to speak"}
             </div>
           </div>
         </div>
