@@ -92,7 +92,7 @@ export default function JPBridge() {
   async function startConversation() {
     setStarted(true);
     setLoading(true);
-    const greeting = await callClaude([], `The student just arrived. Greet them warmly as Miyu, their teacher. Ask whether they'd like to work in English, Japanese, or a mix — their choice. Then ask where they'd like to start: a specific Minna no Nihongo lesson, or Lesson 1 if they're new. Keep it short and welcoming — don't start teaching yet, just open the class.`);
+    const greeting = await callClaude([], `The student just arrived. Greet them warmly in English as Miyu, their teacher. Ask where they'd like to start: a specific Minna no Nihongo lesson, or Lesson 1 if they're new. Keep it short, welcoming, and in English — don't start teaching yet, just open the class.`);
     setMessages([{ role: "assistant", content: greeting }]);
     setLoading(false);
     speak(greeting);
